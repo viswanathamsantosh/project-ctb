@@ -1,12 +1,17 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from './store';
 import { timeSlots } from './timeslots';
+import { ADD_EVENT } from './actions';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  title = 'app';
+  @select() events;
+  @select() lastUpdate;
   timeSlots = timeSlots;
   timeSlotContainer: HTMLElement;
   showCreatePopup = false;
@@ -25,7 +30,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   totalHeight: number;
   totalMinutes = 1440;
   isEditEnable = false;
-  constructor() {
+  constructor(private ngRedux: NgRedux<IAppState>) {
   }
   ngOnInit() {
 
@@ -63,6 +68,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.eventsInput.push(Object.assign({}, evObj));
     this.resetEventObj();
     this.hideEventPopup();
+    this.ngRedux.dispatch({type: ADD_EVENT});
   }
   isOverlappingEvent(startTime, endTime) {
     const elems = this.eventsInput.filter(data =>

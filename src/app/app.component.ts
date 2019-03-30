@@ -10,7 +10,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   timeSlots = timeSlots;
   timeSlotContainer: HTMLElement;
   showCreatePopup = false;
-  eventObj = {
+  eventObj: any = {
     'label': '',
     'startTime': '',
     'endTime': '',
@@ -22,7 +22,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     'left': ''
   };
   eventsInput = [];
-  eventsCalculated = [];
   totalHeight: number;
   totalMinutes = 1440;
   isEditEnable = false;
@@ -42,13 +41,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     const startTimeinMinutes = Number(startTime[0]) * 60 + Number(startTime[1]);
     const endTime = eventObj.endTime.split(':');
     const endTimeinMinutes = Number(endTime[0]) * 60 + Number(endTime[1]);
-    let width;
+    let width, left;
     if (!this.isEditEnable) {
       width = 100 / (this.isOverlappingEvent(startTimeinMinutes, endTimeinMinutes) + 1);
+      left = 100 - width;
     } else {
-      width = eventObj.width;
+      width = Number(eventObj.width.split('%')[0]);
+      left = Number(eventObj.left.split('%')[0]);
     }
-    const left = 100 - width;
     const evObj = {
       'label': eventObj.label,
       'startTime': eventObj.startTime,
@@ -73,7 +73,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
   editEvent(index: number) {
     this.isEditEnable = true;
-    this.eventObj = this.eventsInput.slice(index, 1);
+    this.eventObj = this.eventsInput.splice(index, 1)[0];
     this.showAddEventPopup();
   }
   showAddEventPopup() {
@@ -93,7 +93,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       'height': '',
       'width': '',
       'left': ''
-    };;
+    };
   }
   addEventElement(eventObj: any) {
     const divElement = document.createElement('div');

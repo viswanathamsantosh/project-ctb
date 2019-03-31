@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from './store';
 import { timeSlots } from './timeslots';
-import { ADD_EVENT, REMOVE_EVENT } from './actions';
+import { ADD_EVENT, REMOVE_EVENT, EDIT_EVENT } from './actions';
 import { Event } from './event';
 import { AlertService } from './alert/alert.service';
 import { Messages } from './messages';
@@ -25,12 +25,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     'endTime': '',
     'startTimeinMin': 0,
     'endTimeinMin': 0,
-    'top': '0px',
+    'top': '',
     'height': '',
     'width': '',
     'left': ''
   };
-  eventsInput: Array<Event> = [];
   totalHeight: number;
   totalMinutes = 1440;
   isEditEnable = false;
@@ -41,7 +40,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.timeSlotContainer = document.getElementById('timeSlotContainer');
     this.totalHeight = this.timeSlotContainer.offsetHeight;
-    console.log(this.totalHeight);
   }
   addEvent(): void {
     const eventObj = this.eventObj;
@@ -69,7 +67,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       left = Number(eventObj.left.split('%')[0]);
     }
     const evObj = {
-      'id': 0,
+      'id': eventObj.id,
       'label': eventObj.label,
       'startTime': eventObj.startTime,
       'endTime': eventObj.endTime,
@@ -80,22 +78,26 @@ export class AppComponent implements OnInit, AfterViewInit {
       'width': width + '%',
       'left': left + '%'
     };
-    this.eventsInput.push(Object.assign({}, evObj));
+    if (this.isEditEnable) {
+      this.ngRedux.dispatch({type: EDIT_EVENT, event: evObj});
+    } else {
+      this.ngRedux.dispatch({type: ADD_EVENT, event: evObj});
+    }
     this.resetEventObj();
     this.hideEventPopup();
-    this.ngRedux.dispatch({type: ADD_EVENT, event: evObj});
     this.isEditEnable = false;
   }
   isOverlappingEvent(startTime, endTime): number {
-    const elems = this.eventsInput.filter(data =>
+    const events = this.ngRedux.getState().events;
+    const elems = events.filter(data =>
       (startTime > data.startTimeinMin && startTime < data.endTimeinMin) ||
       (endTime > data.startTimeinMin && endTime < data.endTimeinMin)
     );
     return elems.length;
   }
-  editEvent(index: number): void {
+  editEvent(event: Event): void {
     this.isEditEnable = true;
-    this.eventObj = this.eventsInput.splice(index, 1)[0];
+    this.eventObj = event;
     this.showAddEventPopup();
   }
   showAddEventPopup(): void {

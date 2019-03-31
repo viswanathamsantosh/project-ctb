@@ -1,15 +1,8 @@
-<p class="text-right">
-  <span class="badge badge-secondary">
-    Last Update: {{ (lastUpdate | async) | date:'mediumTime' }} | Total items: {{ (events | async).length }}
-  </span>
-</p>
-<p *ngFor="let item of events"> {{item.id}}</p>
-
 <div class="container">
   <button (click)="showAddEventPopup()">Add Event</button>
   <div class="timeSlotContainer" id="timeSlotContainer">
     <div class="timeSlot" *ngFor="let item of timeSlots"> {{item.label}} </div>
-    <div *ngFor="let item of eventsInput;let i = index" (click)="editEvent(i)" [ngStyle]="{'top': item.top, 'height':item.height, 'width': item.width, 'left': item.left}" class="eventSlot">{{item.label}}</div>
+    <div *ngFor="let item of events | async;let i = index" (click)="editEvent(item)" [ngStyle]="{'top': item.top, 'height':item.height, 'width': item.width, 'left': item.left}" class="eventSlot">{{item.label}}</div>
   </div>
   <div class="popup-container" *ngIf="showCreatePopup">
     <div class="popup">

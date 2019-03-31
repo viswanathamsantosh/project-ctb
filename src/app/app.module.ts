@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { IAppState, rootReducer, INITIAL_STATE } from './store';
 
+import { AlertService } from './alert/alert.service';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,7 @@ import { IAppState, rootReducer, INITIAL_STATE } from './store';
     FormsModule,
     NgReduxModule
   ],
-  providers: [],
+  providers: [AlertService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,8 +1,8 @@
-import { IEvent } from './event';
+import { Event } from './event';
 import { ADD_EVENT, REMOVE_EVENT } from './actions';
 
 export interface IAppState {
-  events: IEvent[];
+  events: Event[];
   lastUpdate: Date;
 }
 export function rootReducer(state: IAppState, action): IAppState {

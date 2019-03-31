@@ -1,4 +1,4 @@
-export interface IEvent {
+export interface Event {
   id: number;
   label: string;
   startTime: string;

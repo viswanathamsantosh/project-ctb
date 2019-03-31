@@ -1,3 +1,10 @@
+<p class="text-right">
+  <span class="badge badge-secondary">
+    Last Update: {{ (lastUpdate | async) | date:'mediumTime' }} | Total items: {{ (events | async).length }}
+  </span>
+</p>
+<p *ngFor="let item of events"> {{item.id}}</p>
+
 <div class="container">
   <button (click)="showAddEventPopup()">Add Event</button>
   <div class="timeSlotContainer" id="timeSlotContainer">
@@ -12,7 +19,7 @@
         <input [(ngModel)]="eventObj.endTime" type="time" placeholder="End time" /><br/>
         <button (click)="addEvent()">Add</button>
       </div>
-      <button class="closeButton" (click)="hideEventPopup()">X</button>
+      <button class="closeButton" (click)="closeEventPopup()">X</button>
     </div>
   </div>
 </div>

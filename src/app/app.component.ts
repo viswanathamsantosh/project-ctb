@@ -107,10 +107,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.showCreatePopup = false;
   }
   closeEventPopup(): void {
-    if (this.isEditEnable) {
-      this.addEvent();
-    }
     this.hideEventPopup();
+    this.resetEventObj();
   }
   resetEventObj(): void {
     this.eventObj = {
